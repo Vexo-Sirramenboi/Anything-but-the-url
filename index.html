@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Template Tools</title>
+
+<!-- FAVICON -->
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="favicon.ico">
 
 <style>
 :root {
@@ -126,6 +131,7 @@ iframe {
   border: 1px solid var(--border);
   color: white;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .small-btn:hover {
@@ -139,8 +145,8 @@ iframe {
 <div class="container">
 
   <div class="header">
-    <h1>Tool Dashboard</h1>
-    <p>Multi-purpose developer utility suite</p>
+    <h1>Template Tools</h1>
+    <p>Multi-purpose web utility dashboard</p>
   </div>
 
   <textarea id="input" placeholder="Enter text, JSON, or HTML..."></textarea>
@@ -180,6 +186,7 @@ iframe {
   </div>
 
   <div class="output-box" id="output"></div>
+
   <iframe id="preview"></iframe>
 
   <div class="actions">
@@ -194,13 +201,11 @@ iframe {
 
 let tool = "extract";
 
-/* SWITCH TOOL */
 function setTool(t) {
   tool = t;
   document.getElementById("preview").style.display = "none";
 }
 
-/* RUN TOOL */
 function runTool() {
 
   const input = document.getElementById("input").value;
@@ -252,14 +257,12 @@ function runTool() {
   output.textContent = result;
 }
 
-/* CLEAR */
 function clearAll() {
   document.getElementById("input").value = "";
   document.getElementById("output").textContent = "";
   document.getElementById("preview").style.display = "none";
 }
 
-/* COPY */
 function copyOutput() {
   navigator.clipboard.writeText(
     document.getElementById("output").textContent
