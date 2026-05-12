@@ -17,7 +17,7 @@
   --accent: #7b2cbf;
 }
 
-/* ✅ HIDE REAL CURSOR EVERYWHERE */
+/* HIDE REAL CURSOR */
 html, body, * {
   cursor: none !important;
 }
@@ -105,9 +105,9 @@ body {
   border: 1px solid var(--border);
   color: white;
   border-radius: 8px;
+  cursor: pointer;
 }
 
-/* tools */
 .sidebar-tools {
   display: flex;
   flex-direction: column;
@@ -203,28 +203,30 @@ textarea {
   border: 2px solid #000;
 }
 
-/* ================= CURSOR ================= */
+/* ================= CURSOR (IMPROVED VISIBILITY) ================= */
 
 .cursor-dot {
   position: fixed;
   width: 8px;
   height: 8px;
-  background: #000;
+  background: #b5b5b5;
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
+  box-shadow: 0 0 6px rgba(255,255,255,0.25);
 }
 
 .cursor-ring {
   position: fixed;
   width: 28px;
   height: 28px;
-  border: 2px solid rgba(0,0,0,0.5);
+  border: 2px solid rgba(180,180,180,0.6);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(255,255,255,0.08);
 }
 
 </style>
@@ -287,8 +289,7 @@ function setTool(t) {
   tool = t;
 }
 
-/* ================= PARTICLES ================= */
-
+/* PARTICLES */
 const shapes = ["circle", "square", "sketch"];
 
 document.addEventListener("click", (e) => {
@@ -321,8 +322,7 @@ function spawnParticles(x, y) {
   }
 }
 
-/* ================= CURSOR ================= */
-
+/* CURSOR */
 const dot = document.getElementById("cursorDot");
 const ring = document.getElementById("cursorRing");
 
