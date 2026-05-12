@@ -1,430 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="icon" href="favicon.ico">
 <title>Template Tools</title>
 
 <style>
 :root {
   --bg:#0b0b0f;
   --border:#2a2a35;
-  --text:#fff;
+  --accent:#7b2cbf;
 }
 
 body {
   margin:0;
-  font-family:Arial;
   background:var(--bg);
-  color:var(--text);
+  font-family:Arial;
   overflow:hidden;
+  color:white;
 }
 
-/* ================= BACKGROUND SYSTEM ================= */
-.layer {
+/* CANVAS */
+canvas {
   position:fixed;
   inset:0;
-  pointer-events:none;
+  z-index:0;
 }
 
-/* GRID (moving) */
-#grid {
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,0.10) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.10) 1px, transparent 1px);
-  background-size:45px 45px;
-  animation: gridMove 6s linear infinite;
-  opacity:0.5;
-}
-
-@keyframes gridMove {
-  from { background-position: 0 0; }
-  to { background-position: 200px -200px; }
-}
-
-/* RAIN */
-.rain {
-  position:absolute;
-  width:2px;
-  height:60px;
-  background:rgba(255,255,255,0.15);
-  animation: fall linear infinite;
-}
-
-@keyframes fall {
-  from { transform: translateY(-120vh); }
-  to { transform: translateY(120vh); }
-}
-
-/* PARTICLES */
-.particle {
-  position:absolute;
-  width:4px;
-  height:4px;
-  background:rgba(255,255,255,0.35);
-  border-radius:50%;
-  animation: float 6s linear infinite;
-}
-
-@keyframes float {
-  from { transform: translateY(100vh); }
-  to { transform: translateY(-10vh); }
-}
-
-/* ================= RIGHT CONTROL PANEL ================= */
-.rightPanel {
+/* SPOTLIGHT */
+#spotlight {
   position:fixed;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  width:140px;
-  background:rgba(22,22,29,0.7);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  z-index:10;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  pointer-events:none;
+
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.12),
+    rgba(123,44,191,0.08),
+    transparent 70%
+  );
+
+  transform:translate(-50%,-50%);
+  z-index:1;
 }
 
-.rightPanel button {
-  width:100%;
-  margin:5px 0;
-  padding:8px;
-  background:#15151c;
-  border:1px solid var(--border);
-  color:#fff;
-  border-radius:8px;
-}
-
-/* ================= SIDEBAR ================= */
+/* SIDEBAR */
 .sidebar {
   position:fixed;
-  left:-240px;
+  left:0;
   top:0;
   width:240px;
   height:100%;
-  background:rgba(22,22,29,0.75);
+  background:rgba(22,22,29,0.8);
   border-right:1px solid var(--border);
-  backdrop-filter:blur(12px);
-  transition:left 0.25s ease;
-  z-index:1000;
-  pointer-events:none;
+  transform:translateX(-100%);
+  z-index:10;
 }
 
-.sidebar.open {
-  left:0;
-  pointer-events:auto;
-}
-
-/* TAB */
 .tab {
   position:absolute;
   right:-40px;
   top:120px;
   width:40px;
   height:90px;
-  background:rgba(22,22,29,0.9);
-  border:1px solid var(--border);
-  border-left:none;
-  border-radius:0 10px 10px 0;
+  background:#15151c;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  z-index:1001;
-  pointer-events:auto;
+  border-radius:0 10px 10px 0;
 }
 
-/* buttons */
 .sidebar button {
   width:100%;
   padding:10px;
   background:transparent;
   border:none;
-  color:#fff;
+  color:white;
   text-align:left;
 }
 
-/* ================= MAIN ================= */
+/* MAIN */
 .container {
-  margin-left:40px;
-  padding:20px;
-  max-width:900px;
   position:relative;
-  z-index:2;
+  z-index:5;
+  padding:20px;
+  margin-left:40px;
+  max-width:900px;
 }
 
-/* panels */
-.panel {
-  display:none;
-  opacity:0;
-  transform:translateY(10px) scale(0.98);
-}
-
-.panel.active {
-  display:block;
-  animation:pop 0.25s ease forwards;
-}
-
-@keyframes pop {
-  from {
-    opacity:0;
-    transform:translateY(12px) scale(0.97);
-  }
-  to {
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-/* inputs */
 textarea,input {
   width:100%;
   margin-top:10px;
   padding:10px;
+  background:#15151c;
+  border:1px solid #333;
+  color:white;
   border-radius:10px;
-  border:1px solid var(--border);
-  background:rgba(22,22,29,0.85);
-  color:#fff;
 }
 
-/* output */
 .output {
   margin-top:10px;
   padding:10px;
-  border:1px solid var(--border);
+  border:1px solid #333;
   border-radius:10px;
-  min-height:70px;
 }
 
-/* ================= CURSOR ================= */
-.cursor-dot {
+/* PANELS */
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* RIGHT PANEL */
+.rightPanel {
+  position:fixed;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:140px;
+  background:rgba(22,22,29,0.6);
+  border:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  border-radius:14px;
+  padding:10px;
+  z-index:10;
+}
+
+.rightPanel button {
+  width:100%;
+  margin:6px 0;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  color:#cfcfcf;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+
+.rightPanel button:hover {
+  background:rgba(123,44,191,0.15);
+  border-color:rgba(123,44,191,0.5);
+  color:white;
+}
+
+.rightPanel button.active {
+  background:rgba(123,44,191,0.25);
+  border-color:var(--accent);
+  color:white;
+  box-shadow:0 0 12px rgba(123,44,191,0.25);
+}
+
+/* CURSOR */
+.cursor {
   position:fixed;
   width:8px;
   height:8px;
   background:#cfcfcf;
   border-radius:50%;
   pointer-events:none;
-  transform:translate(-50%,-50%);
   z-index:9999;
+  transform:translate(-50%,-50%);
 }
 
-.cursor-ring {
+.ring {
   position:fixed;
-  width:28px;
-  height:28px;
+  width:30px;
+  height:30px;
   border:2px solid rgba(200,200,200,0.4);
   border-radius:50%;
   pointer-events:none;
-  transform:translate(-50%,-50%);
   z-index:9998;
+  transform:translate(-50%,-50%);
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- BACKGROUNDS -->
-<div id="grid" class="layer"></div>
-<div id="rainLayer" class="layer"></div>
-<div id="particleLayer" class="layer"></div>
-
-<!-- RIGHT PANEL (BACKGROUND SWITCHER) -->
-<div class="rightPanel">
-  <button onclick="setBG('grid')">Grid</button>
-  <button onclick="setBG('rain')">Rain</button>
-  <button onclick="setBG('particles')">Particles</button>
-</div>
+<canvas id="c"></canvas>
+<div id="spotlight"></div>
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <div class="tab" onclick="toggleSidebar()">☰</div>
+<div class="sidebar" id="sb">
+  <div class="tab" onclick="toggle()">☰</div>
 
   <button onclick="setTool('extract')">URL Extract</button>
   <button onclick="setTool('b64')">Base64</button>
   <button onclick="setTool('url')">URL Encode</button>
   <button onclick="setTool('caesar')">Caesar Cipher</button>
   <button onclick="setTool('reverse')">Reverse</button>
-  <button onclick="setTool('browser')">Browser</button>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="rightPanel">
+  <button onclick="setMode('grid')" class="active">Grid</button>
+  <button onclick="setMode('rain')">Rain</button>
+  <button onclick="setMode('particles')">Particles</button>
 </div>
 
 <!-- MAIN -->
 <div class="container">
 
-  <div class="panel" id="extract">
-    <textarea id="input"></textarea>
-    <div class="output" id="out"></div>
-    <button onclick="run()">Run</button>
-  </div>
+<div id="extract" class="panel active">
+<textarea id="input"></textarea>
+<div class="output" id="out"></div>
+<button onclick="run()">Run</button>
+</div>
 
-  <div class="panel" id="b64">
-    <textarea id="b64in"></textarea>
-    <div class="output" id="b64out"></div>
-    <button onclick="run()">Run</button>
-  </div>
+<div id="b64" class="panel">
+<textarea id="b64in"></textarea>
+<div class="output" id="b64out"></div>
+<button onclick="run()">Run</button>
+</div>
 
-  <div class="panel" id="url">
-    <textarea id="uin"></textarea>
-    <div class="output" id="uout"></div>
-    <button onclick="run()">Run</button>
-  </div>
+<div id="url" class="panel">
+<textarea id="uin"></textarea>
+<div class="output" id="uout"></div>
+<button onclick="run()">Run</button>
+</div>
 
-  <div class="panel" id="caesar">
-    <textarea id="cin"></textarea>
-    <input id="shift" type="number"/>
-    <div class="output" id="cout"></div>
-    <button onclick="run()">Run</button>
-  </div>
+<div id="caesar" class="panel">
+<textarea id="cin"></textarea>
+<input id="shift" type="number">
+<div class="output" id="cout"></div>
+<button onclick="run()">Run</button>
+</div>
 
-  <div class="panel" id="reverse">
-    <textarea id="rin"></textarea>
-    <div class="output" id="rout"></div>
-    <button onclick="run()">Run</button>
-  </div>
-
-  <div class="panel" id="browser">
-    <textarea id="urlin"></textarea>
-    <iframe id="frame" style="width:100%;height:400px;border:1px solid #333;margin-top:10px;"></iframe>
-    <div class="output" id="bstat"></div>
-    <button onclick="run()">Load</button>
-  </div>
+<div id="reverse" class="panel">
+<textarea id="rin"></textarea>
+<div class="output" id="rout"></div>
+<button onclick="run()">Run</button>
+</div>
 
 </div>
 
 <!-- CURSOR -->
-<div class="cursor-dot" id="dot"></div>
-<div class="cursor-ring" id="ring"></div>
+<div class="cursor" id="dot"></div>
+<div class="ring" id="ring"></div>
 
 <script>
+const canvas=document.getElementById("c");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
-let tool="extract";
-let bgMode="grid";
+let mode="grid";
+
+/* MODE SWITCH */
+function setMode(m){
+  mode=m;
+  document.querySelectorAll(".rightPanel button")
+    .forEach(b=>b.classList.remove("active"));
+  event.target.classList.add("active");
+}
 
 /* SIDEBAR */
-function toggleSidebar(){
-  document.getElementById("sidebar").classList.toggle("open");
+let open=false,pos=-240,vel=0;
+function toggle(){open=!open;}
+function sidebarLoop(){
+  let target=open?0:-240;
+  vel+=(target-pos)*0.12;
+  vel*=0.8;
+  pos+=vel;
+  sb.style.transform=`translateX(${pos}px)`;
+  requestAnimationFrame(sidebarLoop);
 }
+sidebarLoop();
 
 /* TOOL SWITCH */
 function setTool(t){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  setTimeout(()=>{
-    document.getElementById(t).classList.add("active");
-  },40);
-  tool=t;
-}
-
-setTool("extract");
-
-/* BACKGROUND SWITCH */
-function setBG(mode){
-  bgMode=mode;
-
-  document.getElementById("grid").style.display="none";
-  document.getElementById("rainLayer").innerHTML="";
-  document.getElementById("particleLayer").innerHTML="";
-
-  if(mode==="grid"){
-    document.getElementById("grid").style.display="block";
-  }
-
-  if(mode==="rain"){
-    setInterval(()=>{
-      if(bgMode!=="rain")return;
-      const d=document.createElement("div");
-      d.className="rain";
-      d.style.left=Math.random()*window.innerWidth+"px";
-      d.style.animationDuration=(0.6+Math.random())+"s";
-      document.getElementById("rainLayer").appendChild(d);
-      setTimeout(()=>d.remove(),2000);
-    },60);
-  }
-
-  if(mode==="particles"){
-    setInterval(()=>{
-      if(bgMode!=="particles")return;
-      const p=document.createElement("div");
-      p.className="particle";
-      p.style.left=Math.random()*window.innerWidth+"px";
-      p.style.top=Math.random()*window.innerHeight+"px";
-      document.getElementById("particleLayer").appendChild(p);
-      setTimeout(()=>p.remove(),5000);
-    },120);
-  }
+  document.getElementById(t).classList.add("active");
 }
 
 /* RUN */
 function run(){
-
-  if(tool==="extract"){
-    const v=document.getElementById("input").value;
-    const links=v.match(/https?:\/\/[^\s]+/g)||[];
-    document.getElementById("out").textContent=links.join("\n")||"No links";
+  if(extract.classList.contains("active")){
+    let links=input.value.match(/https?:\/\/[^\s]+/g)||[];
+    out.textContent=links.join("\n")||"No links";
   }
 
-  if(tool==="b64"){
-    const v=document.getElementById("b64in").value;
-    try{document.getElementById("b64out").textContent=atob(v);}
-    catch{document.getElementById("b64out").textContent=btoa(v);}
+  if(b64.classList.contains("active")){
+    try{b64out.textContent=btoa(b64in.value);}
+    catch{b64out.textContent=atob(b64in.value);}
   }
 
-  if(tool==="url"){
-    const v=document.getElementById("uin").value;
-    try{document.getElementById("uout").textContent=decodeURIComponent(v);}
-    catch{document.getElementById("uout").textContent=encodeURIComponent(v);}
+  if(url.classList.contains("active")){
+    uout.textContent=encodeURIComponent(uin.value);
   }
 
-  if(tool==="caesar"){
-    const s=parseInt(document.getElementById("shift").value||0);
-    const v=document.getElementById("cin").value;
-    document.getElementById("cout").textContent=
-      v.replace(/[a-z]/gi,c=>{
-        const base=c>='a'?97:65;
-        return String.fromCharCode((c.charCodeAt(0)-base+s+26)%26+base);
-      });
+  if(caesar.classList.contains("active")){
+    let s=parseInt(shift.value||0);
+    cout.textContent=cin.value.replace(/[a-z]/gi,c=>{
+      let base=c>='a'?97:65;
+      return String.fromCharCode((c.charCodeAt(0)-base+s+26)%26+base);
+    });
   }
 
-  if(tool==="reverse"){
-    const v=document.getElementById("rin").value;
-    document.getElementById("rout").textContent=
-      v.split(/\s+/).reverse().join(" ");
-  }
-
-  if(tool==="browser"){
-    let url=document.getElementById("urlin").value;
-    if(!/^https?:\/\//i.test(url)) url="https://"+url;
-    document.getElementById("frame").src=url;
-    document.getElementById("bstat").textContent=url;
+  if(reverse.classList.contains("active")){
+    rout.textContent=rin.value.split(/\s+/).reverse().join(" ");
   }
 }
 
-/* CURSOR */
-const dot=document.getElementById("dot");
-const ring=document.getElementById("ring");
-
-let mx=0,my=0;
+/* CURSOR + SPOTLIGHT */
+let mx=0,my=0,rx=0,ry=0,sx=0,sy=0;
 
 document.addEventListener("mousemove",e=>{
-  mx=e.clientX;
-  my=e.clientY;
-
+  mx=e.clientX; my=e.clientY;
   dot.style.left=mx+"px";
   dot.style.top=my+"px";
 });
 
-function animate(){
-  let rx=parseFloat(ring.style.left)||0;
-  let ry=parseFloat(ring.style.top)||0;
+function cursorLoop(){
+  rx+=(mx-rx)*0.15;
+  ry+=(my-ry)*0.15;
+  ring.style.left=rx+"px";
+  ring.style.top=ry+"px";
 
-  ring.style.left=rx+(mx-rx)*0.18+"px";
-  ring.style.top=ry+(my-ry)*0.18+"px";
+  sx+=(mx-sx)*0.12;
+  sy+=(my-sy)*0.12;
+  spotlight.style.left=sx+"px";
+  spotlight.style.top=sy+"px";
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(cursorLoop);
 }
-animate();
+cursorLoop();
 
+/* BACKGROUND SYSTEM */
+let particles=[],rain=[],ripples=[];
+
+for(let i=0;i<120;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:0,vy:0});
+}
+
+setInterval(()=>{
+  rain.push({x:Math.random()*canvas.width,y:-10,v:6+Math.random()*6});
+},50);
+
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  /* GRID (VISIBLE FIXED) */
+  if(mode==="grid"){
+    ctx.fillStyle="rgba(255,255,255,0.12)";
+    for(let x=0;x<canvas.width;x+=40){
+      for(let y=0;y<canvas.height;y+=40){
+        let dx=x-mx,dy=y-my;
+        let dist=Math.sqrt(dx*dx+dy*dy)||1;
+        let push=Math.max(0,100-dist)/6;
+        ctx.fillRect(
+          x+(dx/dist)*push,
+          y+(dy/dist)*push,
+          2,2
+        );
+      }
+    }
+  }
+
+  /* PARTICLES */
+  if(mode==="particles"){
+    particles.forEach(p=>{
+      let dx=mx-p.x,dy=my-p.y;
+      let dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        p.vx+=dx*-0.002;
+        p.vy+=dy*-0.002;
+      }
+      p.x+=p.vx;p.y+=p.vy;
+      p.vx*=0.95;p.vy*=0.95;
+      ctx.fillStyle="rgba(255,255,255,0.3)";
+      ctx.fillRect(p.x,p.y,2,2);
+    });
+  }
+
+  /* RAIN */
+  if(mode==="rain"){
+    ctx.strokeStyle="rgba(255,255,255,0.2)";
+    rain.forEach(d=>{
+      d.y+=d.v;
+      ctx.beginPath();
+      ctx.moveTo(d.x,d.y);
+      ctx.lineTo(d.x,d.y+10);
+      ctx.stroke();
+
+      if(d.y>canvas.height-5){
+        ripples.push({x:d.x,y:d.y,r:0});
+      }
+    });
+
+    rain=rain.filter(d=>d.y<canvas.height);
+
+    ripples.forEach(r=>{
+      r.r+=3;
+      ctx.beginPath();
+      ctx.arc(r.x,r.y,r.r,0,Math.PI*2);
+      ctx.stroke();
+    });
+
+    ripples=ripples.filter(r=>r.r<60);
+  }
+
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* resize */
+window.addEventListener("resize",()=>{
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+});
 </script>
 
 </body>
