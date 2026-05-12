@@ -11,7 +11,6 @@
 :root {
   --bg: #0b0b0f;
   --panel: #16161d;
-  --card: #1c1c25;
   --border: #2a2a35;
   --text: #ffffff;
   --muted: #9a9a9a;
@@ -27,7 +26,7 @@ body {
   overflow-x: hidden;
 }
 
-/* BACKGROUND */
+/* BACKGROUND (UNCHANGED) */
 .bg-grid {
   position: fixed;
   inset: 0;
@@ -65,111 +64,74 @@ body {
   z-index: 1;
 }
 
-/* ================= SIDEBAR ================= */
-
+/* SIDEBAR */
 .sidebar {
   position: fixed;
   left: 0;
   top: 0;
   height: 100%;
   width: 240px;
-  background: rgba(22,22,29,0.7);
+  background: rgba(22,22,29,0.72);
   border-right: 1px solid var(--border);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
   z-index: 5;
-
   display: flex;
   flex-direction: column;
-
   transition: width 0.25s ease;
 }
 
-/* collapsed */
-.sidebar.collapsed {
-  width: 72px;
-}
+.sidebar.collapsed { width: 72px; }
 
-/* TOP BAR FIXED ALIGNMENT */
 .sidebar-top {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 14px;
   border-bottom: 1px solid var(--border);
 }
 
-/* TITLE centered */
-.sidebar-title {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  transition: opacity 0.2s ease;
-}
-
-.sidebar.collapsed .sidebar-title {
-  opacity: 0;
-}
-
-/* FIX: hamburger pinned LEFT */
 .toggle {
   position: absolute;
-  left: 8px;
+  left: 10px;
   width: 34px;
   height: 34px;
   background: #15151c;
   border: 1px solid var(--border);
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-/* tools */
 .sidebar-tools {
   display: flex;
   flex-direction: column;
-  padding: 8px;
-  gap: 4px;
+  padding: 10px;
+  gap: 6px;
 }
 
 .sidebar-tools button {
   width: 100%;
   text-align: left;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  font-size: 13px;
-  transition: 0.15s ease;
 }
 
 .sidebar-tools button:hover {
-  background: rgba(255,255,255,0.04);
-}
-
-.sidebar-tools button.active {
-  border-left: 3px solid var(--accent);
-  background: rgba(123,44,191,0.12);
-  padding-left: 9px;
-}
-
-/* collapsed */
-.sidebar.collapsed .sidebar-tools button {
-  text-align: center;
-  font-size: 11px;
-  padding: 10px 0;
+  background: rgba(255,255,255,0.05);
 }
 
 /* MAIN */
 .container {
   margin-left: 260px;
-  padding: 25px 20px;
+  padding: 30px 20px;
   max-width: 900px;
   position: relative;
   z-index: 2;
-  transition: margin-left 0.25s ease;
 }
 
 .sidebar.collapsed ~ .container {
@@ -179,22 +141,21 @@ body {
 textarea {
   width: 100%;
   height: 200px;
-  background: rgba(22,22,29,0.85);
+  background: rgba(22,22,29,0.9);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   font-size: 14px;
-  resize: vertical;
   outline: none;
 }
 
 .output-box {
-  margin-top: 15px;
-  background: rgba(22,22,29,0.75);
+  margin-top: 10px;
+  background: rgba(22,22,29,0.85);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
   min-height: 90px;
   white-space: pre-wrap;
 }
@@ -215,8 +176,34 @@ textarea {
   cursor: pointer;
 }
 
-.small-btn:hover {
-  border-color: var(--accent);
+/* ================= PARTICLES ================= */
+
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  background: #000;
+  opacity: 0.95;
+  animation: disperse 900ms ease-out forwards;
+}
+
+@keyframes disperse {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(0.2) rotate(var(--r));
+  }
+}
+
+/* shapes */
+.circle { border-radius: 50%; }
+.square { border-radius: 2px; }
+.sketch {
+  background: transparent;
+  border: 2px solid #000;
 }
 
 </style>
@@ -273,12 +260,48 @@ function toggleSidebar() {
 
 function setTool(t) {
   tool = t;
-
-  document.querySelectorAll(".sidebar-tools button")
-    .forEach(b => b.classList.remove("active"));
-
-  event.target.classList.add("active");
 }
+
+/* ================= PARTICLES ================= */
+
+const shapes = ["circle", "square", "sketch"];
+
+document.addEventListener("click", (e) => {
+  spawnParticles(e.clientX, e.clientY);
+});
+
+function spawnParticles(x, y) {
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement("div");
+
+    const type = shapes[Math.floor(Math.random() * shapes.length)];
+    const size = Math.random() * 10 + 6;
+
+    p.classList.add("particle", type);
+
+    p.style.width = size + "px";
+    p.style.height = size + "px";
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 140 + 20;
+
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+
+    p.style.setProperty("--x", dx + "px");
+    p.style.setProperty("--y", dy + "px");
+    p.style.setProperty("--r", (Math.random() * 360) + "deg");
+
+    p.style.left = x + "px";
+    p.style.top = y + "px";
+
+    document.body.appendChild(p);
+
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+/* TOOL LOGIC */
 
 function runTool() {
   const input = document.getElementById("input").value;
@@ -313,16 +336,11 @@ function runTool() {
   }
 
   if (tool === "uuid") {
-    out = crypto.randomUUID ? crypto.randomUUID() :
-      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
-        const r = Math.random()*16|0;
-        const v = c==='x'?r:(r&0x3|0x8);
-        return v.toString(16);
-      });
+    out = crypto.randomUUID();
   }
 
   if (tool === "reverse") {
-    out = input.split(/\s+/).filter(Boolean).reverse().join(" ");
+    out = input.split(/\s+/).reverse().join(" ");
   }
 
   document.getElementById("output").textContent = out;
