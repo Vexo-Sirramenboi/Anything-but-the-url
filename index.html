@@ -348,11 +348,10 @@ function run(){
   }
 }
 
-/* YOUTUBE SEARCH */
 function ytSearch(){
-  let q=document.getElementById("ytq").value;
-  let frame=document.getElementById("ytframe");
-  frame.src="https://www.youtube.com/embed?listType=search&list="+encodeURIComponent(q);
+  let q = document.getElementById("ytq").value;
+  let frame = document.getElementById("ytframe");
+  frame.src = "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
 }
 
 /* CURSOR */
