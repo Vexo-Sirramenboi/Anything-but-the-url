@@ -411,11 +411,9 @@ function loop(){
   /* GRID MODE */
   if(mode==="grid"){
 
-    /* CONNECTION LINES */
     ctx.strokeStyle="rgba(160,160,160,0.05)";
     ctx.lineWidth=1;
 
-    /* UPDATE GRID */
     grid.forEach(p=>{
 
       let dx=p.x-mx;
@@ -431,7 +429,6 @@ function loop(){
         p.vy+=(dy/dist)*force;
       }
 
-      /* SPRING BACK */
       p.vx+=(p.ox-p.x)*0.015;
       p.vy+=(p.oy-p.y)*0.015;
 
@@ -442,7 +439,6 @@ function loop(){
       p.y+=p.vy;
     });
 
-    /* DRAW CONNECTIONS */
     for(let i=0;i<grid.length;i++){
 
       let a=grid[i];
@@ -466,7 +462,6 @@ function loop(){
       }
     }
 
-    /* DRAW DOTS */
     ctx.fillStyle="rgba(170,170,170,0.32)";
 
     grid.forEach(p=>{
@@ -508,7 +503,9 @@ function loop(){
   /* RAIN MODE */
   if(mode==="rain"){
 
-    ctx.strokeStyle="rgba(255,255,255,0.2)";
+    /* SLIGHTLY MORE VISIBLE */
+    ctx.strokeStyle="rgba(210,210,210,0.32)";
+    ctx.lineWidth=1.2;
 
     rain.forEach(d=>{
 
@@ -516,7 +513,7 @@ function loop(){
 
       ctx.beginPath();
       ctx.moveTo(d.x,d.y);
-      ctx.lineTo(d.x,d.y+10);
+      ctx.lineTo(d.x,d.y+18);
       ctx.stroke();
 
       if(d.y>canvas.height-5){
