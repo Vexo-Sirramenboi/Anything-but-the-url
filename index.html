@@ -6,6 +6,10 @@
 
 <title>Template Tools</title>
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0b0f">
+
 <style>
 :root {
   --bg:#0b0b0f;
@@ -137,20 +141,12 @@ textarea,input {
   border:1px solid rgba(255,255,255,0.06);
   color:#cfcfcf;
   cursor:pointer;
-  transition:all 0.2s ease;
-}
-
-.rightPanel button:hover {
-  background:rgba(123,44,191,0.15);
-  border-color:rgba(123,44,191,0.5);
-  color:white;
 }
 
 .rightPanel button.active {
   background:rgba(123,44,191,0.25);
   border-color:var(--accent);
   color:white;
-  box-shadow:0 0 12px rgba(123,44,191,0.25);
 }
 
 /* CURSOR */
@@ -201,7 +197,6 @@ textarea,input {
   <button onclick="setMode('particles')">Particles</button>
 </div>
 
-<!-- MAIN -->
 <div class="container">
 
 <div id="extract" class="panel active">
@@ -237,11 +232,14 @@ textarea,input {
 
 </div>
 
-<!-- CURSOR -->
 <div class="cursor" id="dot"></div>
 <div class="ring" id="ring"></div>
 
 <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+
 const canvas=document.getElementById("c");
 const ctx=canvas.getContext("2d");
 canvas.width=innerWidth;
@@ -249,7 +247,6 @@ canvas.height=innerHeight;
 
 let mode="grid";
 
-/* MODE SWITCH */
 function setMode(m){
   mode=m;
   document.querySelectorAll(".rightPanel button")
@@ -257,7 +254,6 @@ function setMode(m){
   event.target.classList.add("active");
 }
 
-/* SIDEBAR */
 let open=false,pos=-240,vel=0;
 function toggle(){open=!open;}
 function sidebarLoop(){
@@ -270,13 +266,11 @@ function sidebarLoop(){
 }
 sidebarLoop();
 
-/* TOOL SWITCH */
 function setTool(t){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById(t).classList.add("active");
 }
 
-/* RUN */
 function run(){
   if(extract.classList.contains("active")){
     let links=input.value.match(/https?:\/\/[^\s]+/g)||[];
@@ -305,7 +299,6 @@ function run(){
   }
 }
 
-/* CURSOR + SPOTLIGHT */
 let mx=0,my=0,rx=0,ry=0,sx=0,sy=0;
 
 document.addEventListener("mousemove",e=>{
@@ -329,7 +322,6 @@ function cursorLoop(){
 }
 cursorLoop();
 
-/* BACKGROUND SYSTEM */
 let particles=[],rain=[],ripples=[];
 
 for(let i=0;i<120;i++){
@@ -343,7 +335,6 @@ setInterval(()=>{
 function loop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  /* GRID (VISIBLE FIXED) */
   if(mode==="grid"){
     ctx.fillStyle="rgba(255,255,255,0.12)";
     for(let x=0;x<canvas.width;x+=40){
@@ -351,16 +342,11 @@ function loop(){
         let dx=x-mx,dy=y-my;
         let dist=Math.sqrt(dx*dx+dy*dy)||1;
         let push=Math.max(0,100-dist)/6;
-        ctx.fillRect(
-          x+(dx/dist)*push,
-          y+(dy/dist)*push,
-          2,2
-        );
+        ctx.fillRect(x+(dx/dist)*push,y+(dy/dist)*push,2,2);
       }
     }
   }
 
-  /* PARTICLES */
   if(mode==="particles"){
     particles.forEach(p=>{
       let dx=mx-p.x,dy=my-p.y;
@@ -371,12 +357,10 @@ function loop(){
       }
       p.x+=p.vx;p.y+=p.vy;
       p.vx*=0.95;p.vy*=0.95;
-      ctx.fillStyle="rgba(255,255,255,0.3)";
       ctx.fillRect(p.x,p.y,2,2);
     });
   }
 
-  /* RAIN */
   if(mode==="rain"){
     ctx.strokeStyle="rgba(255,255,255,0.2)";
     rain.forEach(d=>{
@@ -407,7 +391,6 @@ function loop(){
 }
 loop();
 
-/* resize */
 window.addEventListener("resize",()=>{
   canvas.width=innerWidth;
   canvas.height=innerHeight;
