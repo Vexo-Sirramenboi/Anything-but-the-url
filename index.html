@@ -170,6 +170,15 @@ textarea,input{
   z-index:9998;
   transform:translate(-50%,-50%);
 }
+
+/* YOUTUBE */
+#ytframe{
+  width:100%;
+  height:360px;
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid #333;
+}
 </style>
 </head>
 
@@ -187,6 +196,9 @@ textarea,input{
   <button onclick="setTool('url')">URL Encode</button>
   <button onclick="setTool('caesar')">Caesar Cipher</button>
   <button onclick="setTool('reverse')">Reverse</button>
+
+  <!-- NEW -->
+  <button onclick="setTool('yt')">YouTube</button>
 </div>
 
 <!-- RIGHT PANEL -->
@@ -227,6 +239,15 @@ textarea,input{
 <textarea id="rin"></textarea>
 <div class="output" id="rout"></div>
 <button onclick="run()">Run</button>
+</div>
+
+<!-- NEW YOUTUBE PANEL -->
+<div id="yt" class="panel">
+<input id="ytq" placeholder="Search YouTube...">
+<button onclick="ytSearch()">Search</button>
+<iframe id="ytframe"
+src="https://www.youtube.com/embed?listType=search&list="
+allowfullscreen></iframe>
 </div>
 
 </div>
@@ -327,6 +348,13 @@ function run(){
   }
 }
 
+/* YOUTUBE SEARCH */
+function ytSearch(){
+  let q=document.getElementById("ytq").value;
+  let frame=document.getElementById("ytframe");
+  frame.src="https://www.youtube.com/embed?listType=search&list="+encodeURIComponent(q);
+}
+
 /* CURSOR */
 let mx=0,my=0,rx=0,ry=0,sx=0,sy=0;
 
@@ -367,9 +395,7 @@ let ripples=[];
 let grid=[];
 
 for(let x=0;x<canvas.width;x+=40){
-
   for(let y=0;y<canvas.height;y+=40){
-
     grid.push({
       ox:x,
       oy:y,
@@ -383,7 +409,6 @@ for(let x=0;x<canvas.width;x+=40){
 
 /* PARTICLES */
 for(let i=0;i<120;i++){
-
   particles.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
@@ -394,13 +419,11 @@ for(let i=0;i<120;i++){
 
 /* RAIN */
 setInterval(()=>{
-
   rain.push({
     x:Math.random()*canvas.width,
     y:-10,
     v:6+Math.random()*6
   });
-
 },50);
 
 /* MAIN LOOP */
@@ -408,7 +431,6 @@ function loop(){
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  /* GRID MODE */
   if(mode==="grid"){
 
     ctx.strokeStyle="rgba(160,160,160,0.05)";
@@ -440,20 +462,15 @@ function loop(){
     });
 
     for(let i=0;i<grid.length;i++){
-
       let a=grid[i];
-
       for(let j=i+1;j<grid.length;j++){
-
         let b=grid[j];
 
         let dx=a.x-b.x;
         let dy=a.y-b.y;
-
         let dist=Math.sqrt(dx*dx+dy*dy);
 
         if(dist<42){
-
           ctx.beginPath();
           ctx.moveTo(a.x,a.y);
           ctx.lineTo(b.x,b.y);
@@ -463,29 +480,23 @@ function loop(){
     }
 
     ctx.fillStyle="rgba(170,170,170,0.32)";
-
     grid.forEach(p=>{
-
       ctx.beginPath();
       ctx.arc(p.x,p.y,2,0,Math.PI*2);
       ctx.fill();
     });
   }
 
-  /* PARTICLES MODE */
   if(mode==="particles"){
 
     ctx.fillStyle="rgba(200,200,200,0.8)";
 
     particles.forEach(p=>{
-
       let dx=mx-p.x;
       let dy=my-p.y;
-
       let dist=Math.sqrt(dx*dx+dy*dy);
 
       if(dist<120){
-
         p.vx+=dx*-0.002;
         p.vy+=dy*-0.002;
       }
@@ -500,15 +511,12 @@ function loop(){
     });
   }
 
-  /* RAIN MODE */
   if(mode==="rain"){
 
-    /* SLIGHTLY MORE VISIBLE */
     ctx.strokeStyle="rgba(210,210,210,0.32)";
     ctx.lineWidth=1.2;
 
     rain.forEach(d=>{
-
       d.y+=d.v;
 
       ctx.beginPath();
@@ -517,21 +525,14 @@ function loop(){
       ctx.stroke();
 
       if(d.y>canvas.height-5){
-
-        ripples.push({
-          x:d.x,
-          y:d.y,
-          r:0
-        });
+        ripples.push({x:d.x,y:d.y,r:0});
       }
     });
 
     rain=rain.filter(d=>d.y<canvas.height);
 
     ripples.forEach(r=>{
-
       r.r+=3;
-
       ctx.beginPath();
       ctx.arc(r.x,r.y,r.r,0,Math.PI*2);
       ctx.stroke();
@@ -545,9 +546,7 @@ function loop(){
 
 loop();
 
-/* RESIZE */
 window.addEventListener("resize",()=>{
-
   canvas.width=innerWidth;
   canvas.height=innerHeight;
 });
