@@ -198,9 +198,11 @@ textarea,input{
   <button onclick="setTool('caesar')">Caesar Cipher</button>
   <button onclick="setTool('reverse')">Reverse</button>
   <button onclick="setTool('yt')">YouTube</button>
-
-  <!-- ✅ NEW BUTTON -->
   <button onclick="maskTab()">Mask Tab</button>
+  <button onclick="setPreset('docs')">Google Docs Mode</button>
+  <button onclick="setPreset('classroom')">Classroom Mode</button>
+  <button onclick="setPreset('github')">GitHub Mode</button>
+  <button onclick="setPreset('reset')">Reset Tab</button>
 </div>
 
 <!-- RIGHT PANEL -->
@@ -552,6 +554,31 @@ window.addEventListener("resize",()=>{
   canvas.width=innerWidth;
   canvas.height=innerHeight;
 });
+  
+  function setPreset(mode){
+
+  const favicon = document.getElementById("faviconTag");
+
+  if(mode === "docs"){
+    document.title = "Google Docs";
+    favicon.href = "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico";
+  }
+
+  if(mode === "classroom"){
+    document.title = "Google Classroom";
+    favicon.href = "https://ssl.gstatic.com/classroom/ic_product_classroom_144.png";
+  }
+
+  if(mode === "github"){
+    document.title = "GitHub";
+    favicon.href = "https://github.githubassets.com/favicons/favicon.svg";
+  }
+
+  if(mode === "reset"){
+    document.title = "Template Tools";
+    favicon.href = "favicon.ico";
+  }
+}
 </script>
 
 </body>
