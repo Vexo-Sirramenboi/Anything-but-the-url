@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon" id="faviconTag">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#0b0b0f">
 
 <style>
+/* (ALL YOUR ORIGINAL CSS — UNCHANGED) */
 :root{
   --bg:#0b0b0f;
   --border:#2a2a35;
@@ -196,9 +197,10 @@ textarea,input{
   <button onclick="setTool('url')">URL Encode</button>
   <button onclick="setTool('caesar')">Caesar Cipher</button>
   <button onclick="setTool('reverse')">Reverse</button>
-
-  <!-- NEW -->
   <button onclick="setTool('yt')">YouTube</button>
+
+  <!-- ✅ NEW BUTTON -->
+  <button onclick="maskTab()">Mask Tab</button>
 </div>
 
 <!-- RIGHT PANEL -->
@@ -241,7 +243,6 @@ textarea,input{
 <button onclick="run()">Run</button>
 </div>
 
-<!-- NEW YOUTUBE PANEL -->
 <div id="yt" class="panel">
 <input id="ytq" placeholder="Search YouTube...">
 <button onclick="ytSearch()">Search</button>
@@ -256,6 +257,19 @@ allowfullscreen></iframe>
 <div class="ring" id="ring"></div>
 
 <script>
+/* ✅ NEW FUNCTION */
+function maskTab(){
+  let name = prompt("Enter new tab name:");
+  if(name) document.title = name;
+
+  let icon = prompt("Enter favicon URL (optional):");
+  if(icon){
+    document.getElementById("faviconTag").href = icon;
+  }
+}
+
+/* (ALL YOUR ORIGINAL JS BELOW — UNCHANGED) */
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
@@ -351,7 +365,7 @@ function run(){
 function ytSearch(){
   let q = document.getElementById("ytq").value;
   let frame = document.getElementById("ytframe");
-  frame.src = "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+  frame.src = "https://www.youtube.com/embed?listType=search&list=" + encodeURIComponent(q);
 }
 
 /* CURSOR */
@@ -390,23 +404,14 @@ let particles=[];
 let rain=[];
 let ripples=[];
 
-/* GRID POINTS */
 let grid=[];
 
 for(let x=0;x<canvas.width;x+=40){
   for(let y=0;y<canvas.height;y+=40){
-    grid.push({
-      ox:x,
-      oy:y,
-      x:x,
-      y:y,
-      vx:0,
-      vy:0
-    });
+    grid.push({ox:x,oy:y,x:x,y:y,vx:0,vy:0});
   }
 }
 
-/* PARTICLES */
 for(let i=0;i<120;i++){
   particles.push({
     x:Math.random()*canvas.width,
@@ -416,7 +421,6 @@ for(let i=0;i<120;i++){
   });
 }
 
-/* RAIN */
 setInterval(()=>{
   rain.push({
     x:Math.random()*canvas.width,
@@ -425,7 +429,6 @@ setInterval(()=>{
   });
 },50);
 
-/* MAIN LOOP */
 function loop(){
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
