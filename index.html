@@ -258,6 +258,8 @@ allowfullscreen></iframe>
 <div class="cursor" id="dot"></div>
 <div class="ring" id="ring"></div>
 
+<!-- (everything above stays EXACTLY the same, only script bottom fixed) -->
+
 <script>
 /* ✅ NEW FUNCTION */
 function maskTab(){
@@ -554,8 +556,9 @@ window.addEventListener("resize",()=>{
   canvas.width=innerWidth;
   canvas.height=innerHeight;
 });
-  
-  function setPreset(mode){
+
+/* ✅ PRESET SYSTEM */
+function setPreset(mode){
 
   const favicon = document.getElementById("faviconTag");
 
@@ -578,8 +581,19 @@ window.addEventListener("resize",()=>{
     document.title = "Template Tools";
     favicon.href = "favicon.ico";
   }
-}
-</script>
 
+  // 💾 SAVE
+  localStorage.setItem("tabPreset", mode);
+}
+
+/* ✅ AUTO LOAD SAVED PRESET */
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("tabPreset");
+  if(saved){
+    setPreset(saved);
+  }
+});
+</script>
+  
 </body>
 </html>
